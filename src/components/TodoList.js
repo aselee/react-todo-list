@@ -24,6 +24,26 @@ export default class TodoList extends React.Component {
     });
   };
 
+  toggleComplete = (id) => {
+    this.setState({
+      todos: this.state.todos.map(todo => {
+        if(todo.id === id) {
+        // Suppose to update
+          return {
+            // insteading having the keys can do:
+            ...todo,
+            // id: todo.id,
+            // text: todo.text,
+            complete: !todo.complete
+          };
+        } else {
+          // if id is not true,
+          return todo;
+        }
+      })
+    });
+  };
+
   render() {
     return (
     <div>
@@ -32,7 +52,12 @@ export default class TodoList extends React.Component {
         // <div key={todo.id}>{todo.text}</div>
         
         // adding Todo.js file to create a function
-        <Todo key={todo.id} text={todo.text} />
+        <Todo 
+          key={todo.id} 
+          // prop that is passing the function
+          toggleComplete={() => this.toggleComplete(todo.id)} 
+          text={todo.text} 
+          />
       ))}
       {/* No use for JSON.stringify, use map */}
       {/* {JSON.stringify(this.state.todos)} */}
