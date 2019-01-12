@@ -8,7 +8,7 @@ export default class TodoList extends React.Component {
     // lifting up the state
     // empty array of todos
     todos: [],
-    todoToShow:'all'
+    todoToShow: "all"
   };
 
   addTodo = (todo) => {
@@ -20,9 +20,9 @@ export default class TodoList extends React.Component {
     // instead of using the newTodos array
     // add it too the setState
 
-    this.setState({
-      todos: [todo, ...this.state.todos]
-    });
+    this.setState(state => ({
+      todos: [todo, ...state.todos]
+    }));
   };
 
   toggleComplete = (id) => {
@@ -55,9 +55,15 @@ export default class TodoList extends React.Component {
   updateTodoToShow = (s) => {
     this.setState({
       todoToShow: s
-    })
-  }
+    });
+  };
 
+  // function to delete todo items
+  handleDeleteTodo = id => {
+    this.setState({
+      todos: this.state.todos.filter(todo => todo.id !== id)
+    });
+  };
 
   render() {
     // adding the render for the buttons
@@ -75,7 +81,7 @@ export default class TodoList extends React.Component {
     return (
     <div>
       <TodoForm onSubmit={this.addTodo} />
-      {this.state.todos.map(todo => (
+      {todos.map(todo => (
         // <div key={todo.id}>{todo.text}</div>
         
         // adding Todo.js file to create a function
@@ -86,6 +92,8 @@ export default class TodoList extends React.Component {
 
           // text={todo.text} 
           // instead of text, we use todo(go to Todo.js)
+          // creating a delete function
+          onDelete={() => this.handleDeleteTodo()}
           todo={todo} 
           />
       ))}
@@ -101,9 +109,9 @@ export default class TodoList extends React.Component {
           {this.state.todos.filter(todo => !todo.complete).length}
       </div>
       <div>
-        <button onClick={() => this.updateTodoToShow('all')}>all</button>
-        <button onClick={() => this.updateTodoToShow('active')}>active</button>
-        <button onClick={() => this.updateTodoToShow('complete')}>complete</button>
+        <button onClick={() => this.updateTodoToShow("all")}>all</button>
+        <button onClick={() => this.updateTodoToShow("active")}>active</button>
+        <button onClick={() => this.updateTodoToShow("complete")}>complete</button>
       </div>
     </div>
     )
