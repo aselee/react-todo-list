@@ -4,6 +4,9 @@ import "./App.css";
 
 
 // https://www.youtube.com/watch?v=I6IY2TqnPDA
+// finished, but active and complete buttons have small issue.
+// design site
+// add more functionalities 
 
 class App extends Component {
   state = {
