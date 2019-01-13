@@ -8,7 +8,8 @@ export default class TodoList extends React.Component {
     // lifting up the state
     // empty array of todos
     todos: [],
-    todoToShow: "all"
+    todoToShow: "all",
+    toggleAllComplete: true
   };
 
   addTodo = (todo) => {
@@ -25,8 +26,8 @@ export default class TodoList extends React.Component {
     }));
   };
 
-  toggleComplete = (id) => {
-    this.setState({
+  toggleComplete = id => {
+    this.setState(state => ({
       todos: this.state.todos.map(todo => {
         if(todo.id === id) {
         // Suppose to update
@@ -48,11 +49,11 @@ export default class TodoList extends React.Component {
           return todo;
         }
       })
-    });
+    }));
   };
 
   // function to updateToDoShow
-  updateTodoToShow = (s) => {
+  updateTodoToShow = s => {
     this.setState({
       todoToShow: s
     });
@@ -60,21 +61,28 @@ export default class TodoList extends React.Component {
 
   // function to delete todo items
   handleDeleteTodo = id => {
-    this.setState({
+    this.setState(state => ({
       todos: this.state.todos.filter(todo => todo.id !== id)
-    });
+    }));
+  };
+
+  // function to remove all crossed todos
+  removeCompleted = () => {
+    this.setState(state => ({
+      todos: this.state.todos.filter(todo => todo.complete)
+    }));
   };
 
   render() {
     // adding the render for the buttons
     let todos = [];
 
-    if (this.state.todoToShow === 'all') {
+    if (this.state.todoToShow === "all") {
       todos = this.state.todos;
-    } else if (this.state.todoToshow === 'active') {
+    } else if (this.state.todoToshow === "active") {
       todos = this.state.todos.filter(todo => !todo.complete)
-    } else if (this.state.todoToshow === 'complete') {
-      todos = this.state.todos.filter(todo => !todo.complete)
+    } else if (this.state.todoToshow === "complete") {
+      todos = this.state.todos.filter(todo => todo.complete)
     }
 
 
@@ -93,7 +101,7 @@ export default class TodoList extends React.Component {
           // text={todo.text} 
           // instead of text, we use todo(go to Todo.js)
           // creating a delete function
-          onDelete={() => this.handleDeleteTodo()}
+          onDelete={() => this.handleDeleteTodo(todo.id)}
           todo={todo} 
           />
       ))}
@@ -109,9 +117,42 @@ export default class TodoList extends React.Component {
           {this.state.todos.filter(todo => !todo.complete).length}
       </div>
       <div>
-        <button onClick={() => this.updateTodoToShow("all")}>all</button>
-        <button onClick={() => this.updateTodoToShow("active")}>active</button>
-        <button onClick={() => this.updateTodoToShow("complete")}>complete</button>
+        <button onClick={() => this.updateTodoToShow("all")}>
+          all
+        </button>
+        <button onClick={() => this.updateTodoToShow("active")}>
+          active
+        </button>
+        <button onClick={() => this.updateTodoToShow("complete")}>
+          complete
+        </button>
+      </div>
+
+      {/* creating a button function to remove all completed todos */}
+      {/* Give the todo items that are complete */}
+      {/* instead of using filter, we only need to find the crossed completed todos
+      so use the some method, some will find the items and exit early */}
+      {this.state.todos.some(todo => todo.complete).length ? (
+        <div>
+          <button onClick={this.removeCompleted}>
+            Remove all complete todos
+          </button>
+        </div>
+      ) : null}
+      <div>
+        <button 
+          onClick={() => 
+            this.setState(state => ({
+              todos: state.todos.map(todo => ({
+                ...todo,
+                complete: state.toggleAllComplete
+              })),
+              toggleAllComplete: !state.toggleAllComplete
+            }))
+          }
+        >
+          toggle all complete: {`${this.state.toggleAllComplete}`}
+        </button>
       </div>
     </div>
     )
